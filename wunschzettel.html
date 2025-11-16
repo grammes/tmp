@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wunschzettel 🎄</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Schneeflocken Animation */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            opacity: 0.8;
+            animation: fall linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes fall {
+            0% {
+                top: -10%;
+                opacity: 0.8;
+            }
+            100% {
+                top: 110%;
+                opacity: 0.3;
+            }
+        }
+        
+        /* Weihnachtliche Dekorationen */
+        .decoration {
+            position: absolute;
+            font-size: 2.5em;
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .decoration.top-left { top: 50px; left: 50px; transform: rotate(-15deg); }
+        .decoration.top-right { top: 50px; right: 50px; transform: rotate(15deg); }
+        .decoration.bottom-left { bottom: 50px; left: 50px; transform: rotate(15deg); }
+        .decoration.bottom-right { bottom: 50px; right: 50px; transform: rotate(-15deg); }
+        
+        /* Hauptcontainer */
+        .container {
+            background: white;
+            width: 210mm;
+            height: 297mm;
+            padding: 40mm 30mm;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+        }
+        
+        /* Weihnachtlicher Rahmen */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 15mm;
+            left: 15mm;
+            right: 15mm;
+            bottom: 15mm;
+            border: 3px dashed #c41e3a;
+            border-radius: 4px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        /* Kleine Sterne in den Ecken */
+        .star-corner {
+            position: absolute;
+            color: #ffd700;
+            font-size: 1.5em;
+            z-index: 2;
+        }
+        
+        .star-corner.tl { top: 10mm; left: 10mm; }
+        .star-corner.tr { top: 10mm; right: 10mm; }
+        .star-corner.bl { bottom: 10mm; left: 10mm; }
+        .star-corner.br { bottom: 10mm; right: 10mm; }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5em;
+            color: #c41e3a;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .header h1::before {
+            content: '🎄';
+            position: absolute;
+            left: -60px;
+            top: 0;
+        }
+        
+        .header h1::after {
+            content: '🎄';
+            position: absolute;
+            right: -60px;
+            top: 0;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1em;
+            color: #666;
+            font-weight: 400;
+            font-style: italic;
+        }
+        
+        /* Dekorative Linie */
+        .divider {
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #c41e3a, transparent);
+            margin: 20px auto;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '❄️';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 0 10px;
+            font-size: 1.2em;
+        }
+        
+        /* Wunschliste */
+        .wishlist {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8f0 100%);
+            padding: 30px 40px;
+            border-radius: 15px;
+            border: 2px solid #ffb3c6;
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.1);
+            position: relative;
+        }
+        
+        .wishlist::before {
+            content: '🎁';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5em;
+            background: white;
+            padding: 0 15px;
+            border-radius: 50%;
+            border: 3px solid #ffb3c6;
+        }
+
+        .wishlist-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(196, 30, 58, 0.2);
+            box-shadow: inset 0 1px 6px rgba(196, 30, 58, 0.1);
+        }
+
+        .wishlist-tab-button {
+            flex: 1;
+            padding: 10px 16px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 1.05em;
+            color: #c41e3a;
+            background: rgba(255, 240, 245, 0.9);
+            border: 2px solid transparent;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .wishlist-tab-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(196, 30, 58, 0.15);
+        }
+
+        .wishlist-tab-button.active {
+            color: white;
+            background: linear-gradient(135deg, #c41e3a, #ff6f91);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 6px 15px rgba(196, 30, 58, 0.3);
+        }
+
+        .wishlist-tab-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .wishlist-tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .wishlist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #c41e3a;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .wishlist-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .wishlist-item::before {
+            content: '⭐';
+            font-size: 1.3em;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .wishlist-item:nth-child(2n)::before {
+            content: '🎀';
+        }
+        
+        .wishlist-item:nth-child(3n)::before {
+            content: '🌟';
+        }
+        
+        .item-content {
+            flex: 1;
+        }
+        
+        .item-title {
+            font-weight: 600;
+            font-size: 1.3em;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .item-description {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.4;
+            font-style: italic;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .footer::before {
+            content: '· ❄️ · 🎅 · ❄️ ·';
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                width: 210mm;
+                height: 297mm;
+                page-break-after: always;
+            }
+            
+            .snowflake,
+            .decoration {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Schneeflocken -->
+    <div class="snowflake" style="left: 10%; animation-duration: 10s; animation-delay: 0s;">❄</div>
+    <div class="snowflake" style="left: 20%; animation-duration: 12s; animation-delay: 2s;">❅</div>
+    <div class="snowflake" style="left: 30%; animation-duration: 15s; animation-delay: 4s;">❄</div>
+    <div class="snowflake" style="left: 40%; animation-duration: 11s; animation-delay: 1s;">❆</div>
+    <div class="snowflake" style="left: 50%; animation-duration: 13s; animation-delay: 3s;">❄</div>
+    <div class="snowflake" style="left: 60%; animation-duration: 14s; animation-delay: 5s;">❅</div>
+    <div class="snowflake" style="left: 70%; animation-duration: 10s; animation-delay: 2s;">❄</div>
+    <div class="snowflake" style="left: 80%; animation-duration: 12s; animation-delay: 4s;">❆</div>
+    <div class="snowflake" style="left: 90%; animation-duration: 11s; animation-delay: 1s;">❄</div>
+    
+    <!-- Dekorationen -->
+    <div class="decoration top-left">🎅</div>
+    <div class="decoration top-right">🎄</div>
+    <div class="decoration bottom-left">🎁</div>
+    <div class="decoration bottom-right">⛄</div>
+    
+    <!-- Hauptcontainer -->
+    <div class="container">
+        <!-- Sterne in den Ecken -->
+        <div class="star-corner tl">✨</div>
+        <div class="star-corner tr">✨</div>
+        <div class="star-corner bl">✨</div>
+        <div class="star-corner br">✨</div>
+        
+        <!-- Header -->
+        <div class="header">
+            <h1>Wunschzettel</h1>
+            <p class="subtitle">Frohe Weihnachtszeit! 🎅</p>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <!-- Wunschliste -->
+        <div class="wishlist">
+            <div class="wishlist-tabs" role="tablist" aria-label="Wunschzettel Tabs">
+                <button class="wishlist-tab-button active" role="tab" aria-selected="true" aria-controls="tab-dennis" id="tab-dennis-btn">Dennis</button>
+                <button class="wishlist-tab-button" role="tab" aria-selected="false" aria-controls="tab-alessa" id="tab-alessa-btn">Alessa</button>
+                <button class="wishlist-tab-button" role="tab" aria-selected="false" aria-controls="tab-nahla" id="tab-nahla-btn">Nahla 🐶</button>
+            </div>
+
+            <div class="wishlist-tab-panel active" role="tabpanel" id="tab-dennis" aria-labelledby="tab-dennis-btn">
+                <div class="wishlist-item">
+                    <div class="item-content">
+                        <div class="item-title">Gemeinsame Zeit</div>
+                        <div class="item-description">Gemeinsame Urlaube oder Events finde ich immer super</div>
+                    </div>
+                </div>
+
+                <div class="wishlist-item">
+                    <div class="item-content">
+                        <div class="item-title">Gutschein zum Fensterputzen</div>
+                        <div class="item-description">🎅</div>
+                    </div>
+                </div>
+
+                <div class="wishlist-item">
+                    <div class="item-content">
+                        <div class="item-title">Reiskocher</div>
+                        <div class="item-description">Ich mache doch recht oft Reis, für eine Person, also kleine Portionen.</div>
+                    </div>
+                </div>
+                
+                <div class="wishlist-item">
+                    <div class="item-content">
+                        <div class="item-title">Powerbank</div>
+                        <div class="item-description">leicht, klein, nicht zu groß, Kapazität nicht so wichtig</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wishlist-tab-panel" role="tabpanel" id="tab-alessa" aria-labelledby="tab-alessa-btn" hidden>
+                <div class="wishlist-item">
+                    <div class="item-content">
+                        <div class="item-title">Portemonnaie</div>
+                        <div class="item-description">Mit Platz für Karten, Münzen und Ausweis.</div>
+                    </div>
+                </div>
+
+                <div class="wishlist-item">
+                    <div class="item-content">
+                        <div class="item-title">Thermo Handschuhe</div>
+                        <div class="item-description">Schlanke Laufhandschuhe, lieber funktional und nicht zu dick.</div>
+                    </div>
+                </div>
+
+                <div class="wishlist-item">
+                    <div class="item-content">
+                        <div class="item-title">Decathlon Gutschein</div>
+                        <div class="item-description">Für neue Laufkleidung wie Langarmshirts und weiteres Zubehör.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wishlist-tab-panel" role="tabpanel" id="tab-nahla" aria-labelledby="tab-nahla-btn" hidden>
+                <div class="wishlist-item">
+                    <div class="item-content">
+                        <div class="item-title">Leckerlies</div>
+                        <div class="item-description">Frauchen sagt immer, dass die so schnell leer sind.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Liebe Grüße & schöne Feiertage!
+        </div>
+    </div>
+    
+    <script>
+        // Dynamische Schneeflocken für mehr Effekt
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.innerHTML = ['❄', '❅', '❆'][Math.floor(Math.random() * 3)];
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.animationDuration = (Math.random() * 5 + 8) + 's';
+            snowflake.style.animationDelay = Math.random() * 5 + 's';
+            snowflake.style.fontSize = (Math.random() * 0.5 + 0.8) + 'em';
+            document.body.appendChild(snowflake);
+            
+            setTimeout(() => snowflake.remove(), 20000);
+        }
+
+        // Erstelle alle paar Sekunden neue Schneeflocken
+        setInterval(createSnowflake, 2000);
+
+        // Tab-Wechsel für die Wunschlisten steuern
+        const tabButtons = document.querySelectorAll('.wishlist-tab-button');
+        const tabPanels = document.querySelectorAll('.wishlist-tab-panel');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn === button);
+                    btn.setAttribute('aria-selected', btn === button ? 'true' : 'false');
+                });
+
+                tabPanels.forEach(panel => {
+                    const isActive = panel.id === button.getAttribute('aria-controls');
+                    panel.classList.toggle('active', isActive);
+                    panel.hidden = !isActive;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
