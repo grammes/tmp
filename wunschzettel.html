@@ -24,21 +24,22 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Changed for better scrolling behavior */
             padding: 20px;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden; /* Allow vertical scroll, hide horizontal overflow */
         }
         
         /* Schneeflocken Animation */
         .snowflake {
-            position: absolute;
+            position: fixed; /* Fixed position for scrolling */
             top: -10px;
             color: white;
             font-size: 1em;
             opacity: 0.8;
             animation: fall linear infinite;
             z-index: 1;
+            pointer-events: none; /* Ensure clicks go through */
         }
         
         @keyframes fall {
@@ -69,7 +70,9 @@
         .container {
             background: white;
             width: 210mm;
-            height: 297mm;
+            min-height: 297mm; /* Allow growth */
+            height: auto;      /* Allow growth */
+            margin: auto;      /* Center in flex container */
             padding: 40mm 30mm;
             border-radius: 8px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -327,6 +330,57 @@
                 display: none;
             }
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 850px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                width: 100%;
+                min-height: auto;
+                padding: 60px 20px 30px 20px; /* Adjusted padding */
+            }
+
+            .container::before {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .header h1::before, 
+            .header h1::after {
+                display: none; /* Hide side trees on mobile */
+            }
+
+            .decoration {
+                display: none; /* Hide corner decorations on mobile */
+            }
+
+            .wishlist-tabs {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .wishlist {
+                padding: 20px;
+            }
+
+            .star-corner {
+                font-size: 1em;
+            }
+            
+            .star-corner.tl { top: 15px; left: 15px; }
+            .star-corner.tr { top: 15px; right: 15px; }
+            .star-corner.bl { bottom: 15px; left: 15px; }
+            .star-corner.br { bottom: 15px; right: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -406,7 +460,13 @@
                         <div class="item-description">Ich habe einen Roborock QV35A: <a href="https://www.amazon.de/roborock-480ml-Reinigungsmittel-Trockensauger-Bodenreiniger/dp/B0DF2XXNK7" target="_blank">Reinigungsmittel</a></div>
                     </div>
                 </div>
-                
+
+                <div class="wishlist-item">
+                    <div class="item-content">
+                        <div class="item-title">Ugly Christmas Sweater</div>
+                        <div class="item-description">Für die Accso-Weihnachtsfeier brauche ich noch einen Pulli: <a href="https://www.qwertee.com/" target="_blank">z.B. von Qwertee (28€)</a></div>
+                    </div>
+                </div>
             </div>
 
             <div class="wishlist-tab-panel" role="tabpanel" id="tab-alessa" aria-labelledby="tab-alessa-btn" hidden>
